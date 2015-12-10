@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_margin="@dimen/spacing_small"
+        app:cardCornerRadius="@dimen/button_elevation"
+        app:cardElevation="@dimen/button_elevation"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/weatherImage"
+                android:layout_width="@dimen/headerValue"
+                android:layout_height="@dimen/headerValue"
+                android:scaleType="centerCrop"
+                android:src="@drawable/art_clear" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/currentWeatherTextView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/headerValue"
+                android:layout_toRightOf="@+id/weatherImage"
+                android:gravity="center"
+                android:text="30 C"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/headerTextSize"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/weatherImage">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/extraInformationTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_medium"
+                    android:layout_marginRight="@dimen/spacing_medium"
+                    android:text="@string/ExtraInformationHeadingString"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/minMaxLinearLayout"
+                    android:layout_below="@+id/extraInformationTextView"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/currentMinimumTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/detailTextSize"
+                        android:gravity="center"
+                        android:text="8 C min" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/currentMaximumTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="@dimen/detailTextSize"
+                        android:layout_weight="1"
+                        android:text=" 30 C max" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:id="@+id/currentPressureHumidityLinearLayout"
+                    android:layout_below="@id/minMaxLinearLayout"
+                    android:layout_height="wrap_content">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/currentPressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="@dimen/detailTextSize"
+                        android:text="8 Pressure" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/currentHumidity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/detailTextSize"
+                        android:text=" 30 Humidity" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/currentPressureHumidityLinearLayout"
+                    android:id="@+id/currentWeatherTypeTextView"
+                    android:gravity="center"
+                    android:text="Sunny"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/detailTextSize"
+                    android:layout_height="match_parent" />
+
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
