@@ -1,31 +1,16 @@
 package com.demo.android_development.pjwelcome.weatherappdemo;
 
-import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.widget.ProgressBar;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.demo.android_development.pjwelcome.weatherappdemo.Data.VolleyDataController;
-import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
-import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
-
-import org.json.JSONObject;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +18,6 @@ import java.util.List;
 public class ForecastContainerActivity extends AppCompatActivity {
 
     private static final String TAG = ForecastContainerActivity.class.getName();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +30,6 @@ public class ForecastContainerActivity extends AppCompatActivity {
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
     }
 
     private void initViews() {
@@ -64,6 +47,26 @@ public class ForecastContainerActivity extends AppCompatActivity {
         adapter.addFragment(new ForecastWeatherFragment(), "5 Day Forecast");
         viewPager.setAdapter(adapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(getBaseContext(), UserSettingsActivity.class));
+            return true;
+        } else if (id == R.id.action_map) {
+            startActivity(new Intent(getBaseContext(), GoogleMapWeatherClusterActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();

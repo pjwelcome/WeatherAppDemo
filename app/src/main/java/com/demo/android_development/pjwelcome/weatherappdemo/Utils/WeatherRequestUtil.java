@@ -1,6 +1,5 @@
 package com.demo.android_development.pjwelcome.weatherappdemo.Utils;
 
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
@@ -18,25 +17,22 @@ import java.util.List;
  */
 public class WeatherRequestUtil {
 
-    private static WeatherRequestUtil mInstance = null;
     private static final String TAG = WeatherRequestUtil.class.getName();
+    private static WeatherRequestUtil mInstance = null;
 
-    /**
-     *
-     * @return
-     */
+
     public static WeatherRequestUtil getInstance() {
         if (mInstance == null)
             mInstance = new WeatherRequestUtil();
         return mInstance;
     }
 
-    public List<ForecastModel> CreateFiveForecastList(JSONObject jsonObject){
+    public List<ForecastModel> CreateFiveForecastList(JSONObject jsonObject) {
         List<ForecastModel> forecastModelList = new ArrayList<>();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("list");
 
-            for (int i = 0 ; i< jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 ForecastModel object = new ForecastModel();
                 object.setName(jsonObject.getJSONObject("city").getString("name"));
                 object.setCurrentTemp(Double.valueOf(jsonArray.getJSONObject(i).getJSONObject("temp").getString("day")));
@@ -57,8 +53,8 @@ public class WeatherRequestUtil {
         Log.d(TAG, "onResponse: Forecast Size:" + forecastModelList.size());
         return forecastModelList;
     }
+
     /**
-     *
      * @param jsonObject
      * @return
      */

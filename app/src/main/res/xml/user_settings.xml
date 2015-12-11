@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Temperature Units">
+
+        <ListPreference
+            android:entries="@array/units_temperature"
+            android:entryValues="@array/units_temperature"
+            android:key="TemperatureUnits"
+            android:title="Temperature Units" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -15,19 +14,12 @@ public class VolleyDataController extends Application {
 
     public static final String TAG = VolleyDataController.class
             .getSimpleName();
-
-    private RequestQueue mRequestQueue;
-
     private static VolleyDataController mInstance;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mInstance = this;
-    }
+    private RequestQueue mRequestQueue;
 
     /**
      * Singleton to get an instance of the VolleyController
+     *
      * @return mInstance
      */
     public static synchronized VolleyDataController getInstance() {
@@ -36,6 +28,11 @@ public class VolleyDataController extends Application {
         return mInstance;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mInstance = this;
+    }
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <RadioGroup
+        android:id="@+id/rg_views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <RadioButton
+            android:id="@+id/rb_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Normal"
+            android:visibility="visible"
+            tools:ignore="HardcodedText" />
+
+        <RadioButton
+            android:id="@+id/rb_satellite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Satellite"
+            android:visibility="visible"
+            tools:ignore="HardcodedText" />
+
+        <RadioButton
+            android:id="@+id/rb_hybrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hybrid"
+            android:visibility="visible"
+            tools:ignore="HardcodedText" />
+
+        <RadioButton
+            android:id="@+id/rb_terrain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terrain"
+            tools:ignore="HardcodedText" />
+
+    </RadioGroup>
+
+    <fragment
+        android:id="@+id/maps"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rg_views" />
+
+</RelativeLayout>
