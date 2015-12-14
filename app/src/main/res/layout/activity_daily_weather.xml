@@ -24,16 +24,34 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/art_clear" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/currentWeatherTextView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/headerValue"
                 android:layout_toRightOf="@+id/weatherImage"
-                android:gravity="center"
-                android:text="30 C"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/headerTextSize"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/currentWeatherTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="30 C"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/headerTextSize"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/placeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"></android.support.v7.widget.AppCompatTextView>
+
+
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,9 +68,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <LinearLayout
+                    android:id="@+id/minMaxLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/minMaxLinearLayout"
                     android:layout_below="@+id/extraInformationTextView"
                     android:layout_margin="@dimen/spacing_medium"
                     android:orientation="horizontal">
@@ -62,55 +80,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="@dimen/detailTextSize"
                         android:gravity="center"
-                        android:text="8 C min" />
+                        android:text="8 C min"
+                        android:textSize="@dimen/detailTextSize" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/currentMaximumTemp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textSize="@dimen/detailTextSize"
                         android:layout_weight="1"
-                        android:text=" 30 C max" />
+                        android:gravity="center"
+                        android:text=" 30 C max"
+                        android:textSize="@dimen/detailTextSize" />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
                     android:id="@+id/currentPressureHumidityLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/minMaxLinearLayout"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/currentPressure"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="@dimen/detailTextSize"
-                        android:text="8 Pressure" />
+                        android:text="8 Pressure"
+                        android:textSize="@dimen/detailTextSize" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/currentHumidity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:textSize="@dimen/detailTextSize"
-                        android:text=" 30 Humidity" />
+                        android:gravity="center"
+                        android:text=" 30 Humidity"
+                        android:textSize="@dimen/detailTextSize" />
 
                 </LinearLayout>
 
                 <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_below="@id/currentPressureHumidityLinearLayout"
                     android:id="@+id/currentWeatherTypeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/currentPressureHumidityLinearLayout"
                     android:gravity="center"
                     android:text="Sunny"
-                    android:textStyle="bold"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/detailTextSize"
-                    android:layout_height="match_parent" />
+                    android:textStyle="bold" />
 
 
 

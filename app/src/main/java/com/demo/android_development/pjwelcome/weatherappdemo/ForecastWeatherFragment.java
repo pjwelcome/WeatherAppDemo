@@ -2,6 +2,7 @@ package com.demo.android_development.pjwelcome.weatherappdemo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -25,6 +26,9 @@ import com.demo.android_development.pjwelcome.weatherappdemo.Data.VolleyDataCont
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONObject;
 
@@ -34,10 +38,12 @@ import java.util.List;
 /**
  * Created by PWelcome on 2015/12/09.
  */
-public class ForecastWeatherFragment extends Fragment {
+public class ForecastWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = ForecastWeatherFragment.class.getName();
     private static final String REQUEST_FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+    protected GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
     List<ForecastModel> forecastModelList = new ArrayList<>();
     private RecylcerForecastAdapter adapter;
     private RecyclerView rv;
@@ -47,7 +53,7 @@ public class ForecastWeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rv = (RecyclerView) inflater.inflate(
                 R.layout.activity_forecast_weather, container, false);
-
+        buildGoogleApiClient();
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         setRecyclerAdapter(rv);
         return rv;
@@ -56,12 +62,31 @@ public class ForecastWeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        makeJsonForecastWeatherRequest(getContext(), "-26.1212455", "28.0316443");
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
     }
 
     private void setRecyclerAdapter(RecyclerView recyclerView) {
-        forecastModelList.add(new ForecastModel());
-        forecastModelList.add(new ForecastModel());
         adapter = new RecylcerForecastAdapter(forecastModelList);
         recyclerView.setAdapter(adapter);
     }
@@ -97,5 +122,24 @@ public class ForecastWeatherFragment extends Fragment {
         });
         // Adding request to request queue
         VolleyDataController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            makeJsonForecastWeatherRequest(getContext(), String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude()));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }

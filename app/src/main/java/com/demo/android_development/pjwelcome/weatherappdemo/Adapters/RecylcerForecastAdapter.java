@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
 import com.demo.android_development.pjwelcome.weatherappdemo.R;
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 
 import java.util.List;
@@ -33,12 +34,15 @@ public class RecylcerForecastAdapter extends RecyclerView.Adapter<RecylcerForeca
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         ForecastModel item = items.get(position);
         holder.minimumForecastTemp.setText("Min:" + String.valueOf(item.getMinTemp()) + " °C");
         holder.maximumForecastTemp.setText("Max:" + String.valueOf(item.getMaxTemp()) + " °C");
         Glide.with(holder.forecastImageView.getContext())
                 .load(WeatherRequestUtil.getInstance().getArtResourceForWeatherCondition(item.getWeatherId()))
                 .into(holder.forecastImageView);
+        holder.dateTextView.setText(Utilities.getInstance().getDayName(holder.dateTextView.getContext(), position));
+
         holder.itemView.setTag(item);
     }
 
@@ -51,12 +55,13 @@ public class RecylcerForecastAdapter extends RecyclerView.Adapter<RecylcerForeca
         ImageView forecastImageView;
         AppCompatTextView minimumForecastTemp;
         AppCompatTextView maximumForecastTemp;
-
+        AppCompatTextView dateTextView;
         public ViewHolder(View itemView) {
             super(itemView);
             forecastImageView = (ImageView) itemView.findViewById(R.id.forecastImage);
             minimumForecastTemp = (AppCompatTextView) itemView.findViewById(R.id.forecastMinTempTextView);
             maximumForecastTemp = (AppCompatTextView) itemView.findViewById(R.id.forecastMaxTempTextView);
+            dateTextView = (AppCompatTextView) itemView.findViewById(R.id.DateTextView);
         }
     }
 }

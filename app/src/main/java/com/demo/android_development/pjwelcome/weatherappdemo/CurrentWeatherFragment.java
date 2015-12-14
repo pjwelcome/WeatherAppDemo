@@ -51,6 +51,7 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     private AppCompatTextView currentPressure;
     private AppCompatTextView currentHumidity;
     private AppCompatTextView currentWeatherDescription;
+    private AppCompatTextView currentLocationName;
     private boolean mLocationDidUpdate = false;
 
     private void initViews(View view) {
@@ -61,18 +62,20 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         currentPressure = (AppCompatTextView) view.findViewById(R.id.currentPressure);
         currentHumidity = (AppCompatTextView) view.findViewById(R.id.currentHumidity);
         currentWeatherDescription = (AppCompatTextView) view.findViewById(R.id.currentWeatherTypeTextView);
+        currentLocationName = (AppCompatTextView) view.findViewById(R.id.placeTextView);
     }
 
     private void setViewValues(ForecastModel model) {
         Glide.with(getContext())
                 .load(WeatherRequestUtil.getInstance().getArtResourceForWeatherCondition(model.getWeatherId()))
                 .into(currentWeatherIcon);
-        currentTemperature.setText(String.valueOf(model.getCurrentTemp()));
+        currentTemperature.setText(String.valueOf(model.getCurrentTemp()) + "°C");
         currentMinimumTemperature.setText("Min:" + String.valueOf(model.getMinTemp()) + "°C");
         currentMaximumTemperature.setText("Max:" + String.valueOf(model.getMaxTemp()) + "°C");
         currentPressure.setText("Pressure:" + String.valueOf(model.getPressure()) + " kPa");
         currentHumidity.setText("Humidity:" + String.valueOf(model.getHumidity()));
         currentWeatherDescription.setText(model.getWeatherDescription());
+        currentLocationName.setText(model.getName());
     }
 
     @Nullable

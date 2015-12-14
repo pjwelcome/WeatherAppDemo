@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 /**
- * Created by Peter-John on 2015-06-17.
+ * Created by PWelcome on 2015/12/09.
+ * WeatherAppDemo
  */
 public class UserSettingsActivity extends AppCompatActivity {
     private Toolbar toolbar;

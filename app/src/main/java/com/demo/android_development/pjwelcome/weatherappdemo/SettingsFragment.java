@@ -8,7 +8,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 
 /**
- * Created by Peter-John on 2015-06-17.
+ * Created by PWelcome on 2015/12/09.
  */
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {

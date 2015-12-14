@@ -37,8 +37,8 @@ public class Utilities {
         // we start at the day returned by local time. Otherwise this is a mess.
         int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
         t.setToNow();
-        long dateInMillis = dayTime.setJulianDay(julianStartDay);
-        int julianDay = Time.getJulianDay(dateInMillis + dayIndex, t.gmtoff);
+        long dateInMillis = dayTime.setJulianDay(julianStartDay + dayIndex);
+        int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
         int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
         if (julianDay == currentJulianDay) {
             return context.getString(R.string.today);
@@ -48,7 +48,7 @@ public class Utilities {
             Time time = new Time();
             time.setToNow();
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-            return dayFormat.format(dateInMillis);
+            return dayFormat.format(dateInMillis + dayIndex);
         }
     }
 
@@ -73,9 +73,10 @@ public class Utilities {
                 .WearableExtender()
                 .addPages(pages);
         Notification notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.common_ic_googleplayservices)
+                .setSmallIcon(R.drawable.ic_clear)
                 .setContentTitle(models.get(0).getName())
                 .setContentText(models.get(0).getWeatherDescription())
+                .setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(resources,
                         WeatherRequestUtil.getInstance().getArtResourceForWeatherCondition(models.get(0).getWeatherId())))
                 .setStyle(style)
