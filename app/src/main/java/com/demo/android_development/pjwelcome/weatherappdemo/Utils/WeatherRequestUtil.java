@@ -62,14 +62,14 @@ public class WeatherRequestUtil {
         ForecastModel forecastObject = new ForecastModel();
         try {
             forecastObject.setName(jsonObject.getString("name"));
-            forecastObject.setCurrentTemp(Double.valueOf(jsonObject.getJSONObject("main").getString("temp")));
-            forecastObject.setHumidity(Double.valueOf(jsonObject.getJSONObject("main").getString("humidity")));
-            forecastObject.setPressure(Double.valueOf(jsonObject.getJSONObject("main").getString("pressure")));
-            forecastObject.setMinTemp(Double.valueOf(jsonObject.getJSONObject("main").getString("temp_min")));
-            forecastObject.setMaxTemp(Double.valueOf(jsonObject.getJSONObject("main").getString("temp_max")));
-            forecastObject.setLatitude(Double.valueOf(jsonObject.getJSONObject("coord").getString("lat")));
-            forecastObject.setLongitude(Double.valueOf(jsonObject.getJSONObject("coord").getString("lon")));
-            forecastObject.setWeatherId(Integer.valueOf(jsonObject.getJSONArray("weather").getJSONObject(0).getString("id")));
+            forecastObject.setCurrentTemp(jsonObject.getJSONObject("main").getDouble("temp"));
+            forecastObject.setHumidity(jsonObject.getJSONObject("main").getDouble("humidity"));
+            forecastObject.setPressure(jsonObject.getJSONObject("main").getDouble("pressure"));
+            forecastObject.setMinTemp(jsonObject.getJSONObject("main").getDouble("temp_min"));
+            forecastObject.setMaxTemp(jsonObject.getJSONObject("main").getDouble("temp_max"));
+            forecastObject.setLatitude(jsonObject.getJSONObject("coord").getDouble("lat"));
+            forecastObject.setLongitude(jsonObject.getJSONObject("coord").getDouble("lon"));
+            forecastObject.setWeatherId(jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id"));
             forecastObject.setWeatherType(jsonObject.getJSONArray("weather").getJSONObject(0).getString("main"));
             forecastObject.setWeatherDescription(jsonObject.getJSONArray("weather").getJSONObject(0).getString("description"));
         } catch (JSONException e) {
