@@ -5,6 +5,28 @@ package com.demo.android_development.pjwelcome.weatherappdemo.Model;
  */
 public class ForecastModel {
 
+
+    private Double Latitude;
+    private Double Longitude;
+    private String WeatherType;
+    private String WeatherDescription;
+    private Double Humidity;
+    private Double Pressure;
+    private Double CurrentTemp;
+    private Double MinTemp;
+    private Double MaxTemp;
+    private Double WindSpeed;
+    private String Name;
+    private int WeatherId;
+
+    public int getWeatherId() {
+        return WeatherId;
+    }
+
+    public void setWeatherId(int weatherId) {
+        WeatherId = weatherId;
+    }
+
     public Double getLatitude() {
         return Latitude;
     }
@@ -92,26 +114,4 @@ public class ForecastModel {
     public void setName(String name) {
         Name = name;
     }
-
-    private Double Latitude;
-    private Double Longitude;
-    private String WeatherType;
-    private String WeatherDescription;
-    private Double Humidity;
-    private Double Pressure;
-    private Double CurrentTemp;
-    private Double MinTemp;
-    private Double MaxTemp;
-    private Double WindSpeed;
-    private String Name;
-
-    public int getWeatherId() {
-        return WeatherId;
-    }
-
-    public void setWeatherId(int weatherId) {
-        WeatherId = weatherId;
-    }
-
-    private int WeatherId;
 }

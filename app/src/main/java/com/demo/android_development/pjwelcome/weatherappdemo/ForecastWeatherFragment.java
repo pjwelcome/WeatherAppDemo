@@ -21,9 +21,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.demo.android_development.pjwelcome.weatherappdemo.Adapters.RecylcerForecastAdapter;
+import com.demo.android_development.pjwelcome.weatherappdemo.Adapters.RecyclerForecastAdapter;
 import com.demo.android_development.pjwelcome.weatherappdemo.Data.VolleyDataController;
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Constants;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 import com.google.android.gms.common.ConnectionResult;
@@ -41,11 +42,11 @@ import java.util.List;
 public class ForecastWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = ForecastWeatherFragment.class.getName();
-    private static final String REQUEST_FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
     List<ForecastModel> forecastModelList = new ArrayList<>();
-    private RecylcerForecastAdapter adapter;
+    private RecyclerForecastAdapter adapter;
     private RecyclerView rv;
 
     @Nullable
@@ -87,28 +88,28 @@ public class ForecastWeatherFragment extends Fragment implements GoogleApiClient
     }
 
     private void setRecyclerAdapter(RecyclerView recyclerView) {
-        adapter = new RecylcerForecastAdapter(forecastModelList);
+        adapter = new RecyclerForecastAdapter(forecastModelList);
         recyclerView.setAdapter(adapter);
     }
 
     public void makeJsonForecastWeatherRequest(Context context, String... params) {
 
         AlertDialog.Builder builder =
-                new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle).setMessage("Loading...");
+                new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle).setMessage(getString(R.string.LoadingString));
         final AppCompatDialog alert = builder.create();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString("TemperatureUnits", "metric") + "&cnt=5", params[0], params[1], context.getString(R.string.weather_api_key));
+        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString(getString(R.string.tempUnitKey), getString(R.string.tempUnitDefault)) + "&cnt=5", params[0], params[1], context.getString(R.string.weather_api_key));
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                REQUEST_FORECAST_URL + QueryParams,
+                Constants.REQUEST_FORECAST_URL + QueryParams,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
 
-                        forecastModelList = WeatherRequestUtil.getInstance().CreateFiveForecastList(response);
-                        Utilities.getInstance().CreateWearablePagingNotification(getContext(), forecastModelList);
-                        rv.setAdapter(new RecylcerForecastAdapter(forecastModelList));
+                        forecastModelList = WeatherRequestUtil.getInstance().createFiveForecastList(response);
+                        Utilities.getInstance().createWearablePagingNotification(getContext(), forecastModelList);
+                        rv.setAdapter(new RecyclerForecastAdapter(forecastModelList));
                         alert.hide();
                     }
                 }, new Response.ErrorListener() {

@@ -34,17 +34,17 @@ public class ForecastContainerActivity extends AppCompatActivity {
 
     private void initViews() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         if (viewPager != null) {
             setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
         }
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new CurrentWeatherFragment(), "Current Weather");
-        adapter.addFragment(new ForecastWeatherFragment(), "5 Day Forecast");
+        adapter.addFragment(new CurrentWeatherFragment(), getString(R.string.currentWeatherHeadingTabString));
+        adapter.addFragment(new ForecastWeatherFragment(), getString(R.string.fiveDayWeatherHeadingTabString));
         viewPager.setAdapter(adapter);
     }
 

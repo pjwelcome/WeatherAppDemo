@@ -58,9 +58,9 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("TemperatureUnits")) {
+        if (key.equals(getString(R.string.tempUnitKey))) {
             Preference pref = findPreference(key);
-            pref.setSummary(sharedPreferences.getString(key, ""));
+            pref.setSummary(sharedPreferences.getString(key, getString(R.string.tempUnitDefault)));
         }
     }
 }

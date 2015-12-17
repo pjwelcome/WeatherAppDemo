@@ -7,6 +7,15 @@
     <string name="action_settings">Settings</string>
     <string name="settings_weathermap_string">Weather Map</string>
     <string name="json_test_data">{name:Sha}</string>
+    <string name="LoadingString">Loading...</string>
+    <string name="tempUnitKey">TemperatureUnits</string>
+    <string name="tempUnitDefault">metric</string>
+    <string name="currentWeatherHeadingTabString">Current Weather</string>
+    <string name="fiveDayWeatherHeadingTabString">5 Day Forecast</string>
+    <string name="weatherMapTitleString">Weather Map</string>
+    <string name="SettingsHeadingString">Settings</string>
+    <string name="celsiusString">°C</string>
+    <string name="fahrenheitString">°F</string>
     <string-array name="units_temperature">
         <item>metric</item>
         <item>imperial</item>

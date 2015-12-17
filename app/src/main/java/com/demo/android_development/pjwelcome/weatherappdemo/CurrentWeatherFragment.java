@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.demo.android_development.pjwelcome.weatherappdemo.Data.VolleyDataController;
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Constants;
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,11 +40,10 @@ import org.json.JSONObject;
 public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = CurrentWeatherFragment.class.getName();
-    private static final String REQUEST_CURRENT_URL = "http://api.openweathermap.org/data/2.5/weather?";
+
     public LocationRequest mLocationRequest;
     public GoogleApiClient mGoogleApiClient;
     protected Location mCurrentLocation;
-    ForecastModel model;
     private ImageView currentWeatherIcon;
     private AppCompatTextView currentTemperature;
     private AppCompatTextView currentMinimumTemperature;
@@ -69,9 +69,9 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         Glide.with(getContext())
                 .load(WeatherRequestUtil.getInstance().getArtResourceForWeatherCondition(model.getWeatherId()))
                 .into(currentWeatherIcon);
-        currentTemperature.setText(String.valueOf(model.getCurrentTemp()) + "°C");
-        currentMinimumTemperature.setText("Min:" + String.valueOf(model.getMinTemp()) + "°C");
-        currentMaximumTemperature.setText("Max:" + String.valueOf(model.getMaxTemp()) + "°C");
+        currentTemperature.setText(String.valueOf(model.getCurrentTemp()) + (Utilities.getInstance().isCelsius(getContext()) ? getString(R.string.celsiusString) : getString(R.string.fahrenheitString)));
+        currentMinimumTemperature.setText("Min:" + String.valueOf(model.getMinTemp()) + (Utilities.getInstance().isCelsius(getContext()) ? getString(R.string.celsiusString) : getString(R.string.fahrenheitString)));
+        currentMaximumTemperature.setText("Max:" + String.valueOf(model.getMaxTemp()) + (Utilities.getInstance().isCelsius(getContext()) ? getString(R.string.celsiusString) : getString(R.string.fahrenheitString)));
         currentPressure.setText("Pressure:" + String.valueOf(model.getPressure()) + " kPa");
         currentHumidity.setText("Humidity:" + String.valueOf(model.getHumidity()));
         currentWeatherDescription.setText(model.getWeatherDescription());
@@ -111,7 +111,7 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
 
         mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     @Override
@@ -176,6 +176,7 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     public void onPause() {
         super.onPause();
         stopLocationUpdates();
+        mLocationDidUpdate = false;
     }
 
     /**
@@ -188,13 +189,13 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         final ProgressDialog progressBar = new ProgressDialog(context);
         progressBar.setCancelable(false);
         progressBar.setProgressStyle(R.style.CircularProgress);
-        progressBar.setMessage("Loading...");
+        progressBar.setMessage(getString(R.string.LoadingString));
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressBar.show();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString("TemperatureUnits", "metric"), params[0], params[1], context.getString(R.string.weather_api_key));
+        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString(getString(R.string.tempUnitKey), getString(R.string.tempUnitDefault)), params[0], params[1], context.getString(R.string.weather_api_key));
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                REQUEST_CURRENT_URL + QueryParams,
+                Constants.REQUEST_CURRENT_URL + QueryParams,
                 new Response.Listener<JSONObject>() {
 
                     @Override

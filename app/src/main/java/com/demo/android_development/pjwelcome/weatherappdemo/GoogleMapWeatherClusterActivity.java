@@ -14,6 +14,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.demo.android_development.pjwelcome.weatherappdemo.Data.VolleyDataController;
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.ForecastModel;
 import com.demo.android_development.pjwelcome.weatherappdemo.Model.WeatherItem;
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Constants;
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,11 +34,10 @@ public class GoogleMapWeatherClusterActivity extends BaseGoogleMapFragmentActivi
         ClusterManager.OnClusterItemClickListener<WeatherItem>,
         ClusterManager.OnClusterItemInfoWindowClickListener<WeatherItem> {
     private static final String TAG = GoogleMapWeatherClusterActivity.class.getName();
-    private static final String REQUEST_CURRENT_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private ClusterManager<WeatherItem> mClusterManager;
 
     @Override
-    protected void ExecuteGoogleMapCode() {
+    protected void executeGoogleMapCode() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-26.167616, 28.079329), 4));
 
         mClusterManager = new ClusterManager<>(this, getMap());
@@ -50,12 +51,17 @@ public class GoogleMapWeatherClusterActivity extends BaseGoogleMapFragmentActivi
     }
 
     private void getWeatherCoOrdinates() {
+        LatLng capetown = new LatLng(-26.156709, 28.039165);
+        LatLng johannesburg = new LatLng(-33.699091, 25.515884);
+        LatLng portElizabeth = new LatLng(-33.902011, 18.473043);
+        LatLng durban = new LatLng(-25.694899, 28.229347);
+        LatLng pretoria = new LatLng(-29.800342, 30.967958);
 
-        makeJsonWeatherRequest(this, String.valueOf(-26.156709), String.valueOf(28.039165));
-        makeJsonWeatherRequest(this, String.valueOf(-33.699091), String.valueOf(25.515884));
-        makeJsonWeatherRequest(this, String.valueOf(-33.902011), String.valueOf(18.473043));
-        makeJsonWeatherRequest(this, String.valueOf(-25.694899), String.valueOf(28.229347));
-        makeJsonWeatherRequest(this, String.valueOf(-29.800342), String.valueOf(30.967958));
+        makeJsonWeatherRequest(this, String.valueOf(capetown.latitude), String.valueOf(capetown.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(johannesburg.latitude), String.valueOf(johannesburg.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(portElizabeth.latitude), String.valueOf(portElizabeth.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(durban.latitude), String.valueOf(durban.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(pretoria.latitude), String.valueOf(pretoria.longitude));
 
     }
 
@@ -85,24 +91,24 @@ public class GoogleMapWeatherClusterActivity extends BaseGoogleMapFragmentActivi
      * @param context
      * @param params
      */
-    public void makeJsonWeatherRequest(Context context, String... params) {
+    public void makeJsonWeatherRequest(final Context context, String... params) {
         final ProgressDialog progressBar = new ProgressDialog(context);
         progressBar.setCancelable(false);
         progressBar.setProgressStyle(R.style.CircularProgress);
-        progressBar.setMessage("Loading...");
+        progressBar.setMessage(getString(R.string.LoadingString));
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressBar.show();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString("TemperatureUnits", "metric"), params[0], params[1], context.getString(R.string.weather_api_key));
+        String QueryParams = String.format("lat=%s&lon=%s&APPID=%s&units=" + prefs.getString(getString(R.string.tempUnitKey), getString(R.string.tempUnitDefault)), params[0], params[1], context.getString(R.string.weather_api_key));
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                REQUEST_CURRENT_URL + QueryParams,
+                Constants.REQUEST_CURRENT_URL + QueryParams,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
                         ForecastModel model = WeatherRequestUtil.getInstance().createModelFromJson(response);
-                        mClusterManager.addItem(new WeatherItem(model.getLatitude(), model.getLongitude(), model.getName(), String.valueOf(model.getCurrentTemp()) + "°C " + model.getWeatherDescription()));
+                        mClusterManager.addItem(new WeatherItem(model.getLatitude(), model.getLongitude(), model.getName(), String.valueOf(model.getCurrentTemp()) + (Utilities.getInstance().isCelsius(context) ? context.getString(R.string.celsiusString) : context.getString(R.string.fahrenheitString)) + model.getWeatherDescription()));
                         progressBar.hide();
                     }
                 }, new Response.ErrorListener() {

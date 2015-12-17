@@ -18,11 +18,11 @@ import java.util.List;
 /**
  * Created by PWelcome on 2015/12/09.
  */
-public class RecylcerForecastAdapter extends RecyclerView.Adapter<RecylcerForecastAdapter.ViewHolder> {
+public class RecyclerForecastAdapter extends RecyclerView.Adapter<RecyclerForecastAdapter.ViewHolder> {
 
     private List<ForecastModel> items;
 
-    public RecylcerForecastAdapter(List<ForecastModel> items) {
+    public RecyclerForecastAdapter(List<ForecastModel> items) {
         this.items = items;
     }
 
@@ -36,8 +36,8 @@ public class RecylcerForecastAdapter extends RecyclerView.Adapter<RecylcerForeca
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         ForecastModel item = items.get(position);
-        holder.minimumForecastTemp.setText("Min:" + String.valueOf(item.getMinTemp()) + " °C");
-        holder.maximumForecastTemp.setText("Max:" + String.valueOf(item.getMaxTemp()) + " °C");
+        holder.minimumForecastTemp.setText("Min:" + String.valueOf(item.getMinTemp()) + (Utilities.getInstance().isCelsius(holder.minimumForecastTemp.getContext()) ? holder.minimumForecastTemp.getContext().getString(R.string.celsiusString) : holder.minimumForecastTemp.getContext().getString(R.string.fahrenheitString)));
+        holder.maximumForecastTemp.setText("Max:" + String.valueOf(item.getMaxTemp()) + (Utilities.getInstance().isCelsius(holder.maximumForecastTemp.getContext()) ? holder.maximumForecastTemp.getContext().getString(R.string.celsiusString) : holder.maximumForecastTemp.getContext().getString(R.string.fahrenheitString)));
         Glide.with(holder.forecastImageView.getContext())
                 .load(WeatherRequestUtil.getInstance().getArtResourceForWeatherCondition(item.getWeatherId()))
                 .into(holder.forecastImageView);
@@ -56,6 +56,7 @@ public class RecylcerForecastAdapter extends RecyclerView.Adapter<RecylcerForeca
         AppCompatTextView minimumForecastTemp;
         AppCompatTextView maximumForecastTemp;
         AppCompatTextView dateTextView;
+
         public ViewHolder(View itemView) {
             super(itemView);
             forecastImageView = (ImageView) itemView.findViewById(R.id.forecastImage);

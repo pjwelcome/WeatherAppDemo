@@ -27,7 +27,7 @@ public class WeatherRequestUtil {
         return mInstance;
     }
 
-    public List<ForecastModel> CreateFiveForecastList(JSONObject jsonObject) {
+    public List<ForecastModel> createFiveForecastList(JSONObject jsonObject) {
         List<ForecastModel> forecastModelList = new ArrayList<>();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("list");

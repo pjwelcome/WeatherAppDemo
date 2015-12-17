@@ -27,14 +27,14 @@ public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
 
-            toolbar.setTitle("Weather Map");
+            toolbar.setTitle(R.string.weatherMapTitleString);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
@@ -76,7 +76,7 @@ public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity {
             mUiSettings.setRotateGesturesEnabled(true);
             mMap.setMyLocationEnabled(true);
 
-            ExecuteGoogleMapCode();
+            executeGoogleMapCode();
         }
     }
 
@@ -86,7 +86,7 @@ public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity {
         setUpMapIfNeeded();
     }
 
-    protected abstract void ExecuteGoogleMapCode();
+    protected abstract void executeGoogleMapCode();
 
     protected GoogleMap getMap() {
         setUpMapIfNeeded();

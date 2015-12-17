@@ -6,7 +6,8 @@
         <ListPreference
             android:entries="@array/units_temperature"
             android:entryValues="@array/units_temperature"
-            android:key="TemperatureUnits"
+            android:key="@string/tempUnitKey"
+            android:summary="@string/tempUnitDefault"
             android:title="Temperature Units" />
 
     </PreferenceCategory>
