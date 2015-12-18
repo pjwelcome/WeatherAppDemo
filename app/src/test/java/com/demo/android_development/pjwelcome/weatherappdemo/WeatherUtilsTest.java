@@ -3,6 +3,7 @@ package com.demo.android_development.pjwelcome.weatherappdemo;
 import android.content.Context;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 
 import org.json.JSONException;
@@ -45,4 +46,17 @@ public class WeatherUtilsTest {
     public void testCreateModelFromJson_Test() throws JSONException {
         assertEquals(WeatherRequestUtil.getInstance().createModelFromJson(jsonObject).getName(), "Shuzenji");
     }
+
+    @Test
+    public void DayNameTodayTest() {
+        String today = Utilities.getInstance().getDayName(context, 0);
+        assertEquals(today, context.getString(R.string.today));
+    }
+
+    @Test
+    public void DayNameTomorrowTest() {
+        String tomorrow = Utilities.getInstance().getDayName(context, 1);
+        assertEquals(tomorrow, context.getString(R.string.tomorrow));
+    }
+
 }
