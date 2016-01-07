@@ -11,4 +11,8 @@
     <string name="SettingsHeadingString">Settings</string>
     <string name="celsiusString">°C</string>
     <string name="fahrenheitString">°F</string>
+    <string name="ExitString">Exit</string>
+    <string name="RetryString">Retry</string>
+    <string name="LocationErrorMessageString">You Have choose to not allow location which the app need to function please see further options below.</string>
+    <string name="LocationErrorMessageTitleString">Location Request Declined</string>
 </resources>

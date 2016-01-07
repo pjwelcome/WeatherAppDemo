@@ -49,6 +49,11 @@ public class ForecastWeatherFragment extends Fragment implements GoogleApiClient
     private RecyclerForecastAdapter adapter;
     private RecyclerView rv;
 
+    public static ForecastWeatherFragment newInstance() {
+        ForecastWeatherFragment fragment = new ForecastWeatherFragment();
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +68,7 @@ public class ForecastWeatherFragment extends Fragment implements GoogleApiClient
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -128,7 +134,12 @@ public class ForecastWeatherFragment extends Fragment implements GoogleApiClient
 
     @Override
     public void onConnected(Bundle bundle) {
+        startRequest();
+    }
+
+    public void startRequest() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         if (mLastLocation != null) {
             makeJsonForecastWeatherRequest(getContext(), String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude()));
         }

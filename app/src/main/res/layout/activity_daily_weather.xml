@@ -47,7 +47,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"></android.support.v7.widget.AppCompatTextView>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
 
             <RelativeLayout
@@ -98,7 +98,7 @@
                     android:layout_below="@id/minMaxLinearLayout"
                     android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatTextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/currentPressure"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

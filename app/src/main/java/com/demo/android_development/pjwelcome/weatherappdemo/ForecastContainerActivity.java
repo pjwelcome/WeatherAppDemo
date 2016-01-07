@@ -18,13 +18,28 @@ import java.util.List;
 public class ForecastContainerActivity extends AppCompatActivity {
 
     private static final String TAG = ForecastContainerActivity.class.getName();
+    CurrentWeatherFragment currentWeatherFragment;
+    ForecastWeatherFragment forecastWeatherFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forcast_container);
+        currentWeatherFragment = CurrentWeatherFragment.newInstance();
+        forecastWeatherFragment = ForecastWeatherFragment.newInstance();
         initToolbar();
         initViews();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CurrentWeatherFragment.REQUEST_CHECK_SETTINGS) {
+            currentWeatherFragment.onActivityResult(requestCode, resultCode, data);
+            currentWeatherFragment.setFiveDayWeather(forecastWeatherFragment);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void initToolbar() {
@@ -43,8 +58,8 @@ public class ForecastContainerActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new CurrentWeatherFragment(), getString(R.string.currentWeatherHeadingTabString));
-        adapter.addFragment(new ForecastWeatherFragment(), getString(R.string.fiveDayWeatherHeadingTabString));
+        adapter.addFragment(currentWeatherFragment, getString(R.string.currentWeatherHeadingTabString));
+        adapter.addFragment(forecastWeatherFragment, getString(R.string.fiveDayWeatherHeadingTabString));
         viewPager.setAdapter(adapter);
     }
 

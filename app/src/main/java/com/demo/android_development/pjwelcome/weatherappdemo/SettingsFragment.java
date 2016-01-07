@@ -3,6 +3,7 @@ package com.demo.android_development.pjwelcome.weatherappdemo;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -37,6 +38,12 @@ public class SettingsFragment extends PreferenceFragment
         if (p instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) p;
             p.setSummary(editTextPref.getText());
+        } else if (p instanceof ListPreference) {
+            ListPreference listPreference = (ListPreference) p;
+            if (listPreference.getValue() == null) {
+                listPreference.setValueIndex(0);
+            }
+            p.setSummary(listPreference.getValue());
         }
     }
 

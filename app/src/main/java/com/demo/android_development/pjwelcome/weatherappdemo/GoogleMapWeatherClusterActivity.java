@@ -51,17 +51,12 @@ public class GoogleMapWeatherClusterActivity extends BaseGoogleMapFragmentActivi
     }
 
     private void getWeatherCoOrdinates() {
-        LatLng capetown = new LatLng(-26.156709, 28.039165);
-        LatLng johannesburg = new LatLng(-33.699091, 25.515884);
-        LatLng portElizabeth = new LatLng(-33.902011, 18.473043);
-        LatLng durban = new LatLng(-25.694899, 28.229347);
-        LatLng pretoria = new LatLng(-29.800342, 30.967958);
 
-        makeJsonWeatherRequest(this, String.valueOf(capetown.latitude), String.valueOf(capetown.longitude));
-        makeJsonWeatherRequest(this, String.valueOf(johannesburg.latitude), String.valueOf(johannesburg.longitude));
-        makeJsonWeatherRequest(this, String.valueOf(portElizabeth.latitude), String.valueOf(portElizabeth.longitude));
-        makeJsonWeatherRequest(this, String.valueOf(durban.latitude), String.valueOf(durban.longitude));
-        makeJsonWeatherRequest(this, String.valueOf(pretoria.latitude), String.valueOf(pretoria.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(Constants.capetown.latitude), String.valueOf(Constants.capetown.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(Constants.johannesburg.latitude), String.valueOf(Constants.johannesburg.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(Constants.portElizabeth.latitude), String.valueOf(Constants.portElizabeth.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(Constants.durban.latitude), String.valueOf(Constants.durban.longitude));
+        makeJsonWeatherRequest(this, String.valueOf(Constants.pretoria.latitude), String.valueOf(Constants.pretoria.longitude));
 
     }
 

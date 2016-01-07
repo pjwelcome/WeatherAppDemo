@@ -1,13 +1,19 @@
 package com.demo.android_development.pjwelcome.weatherappdemo;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,22 +34,29 @@ import com.demo.android_development.pjwelcome.weatherappdemo.Utils.Utilities;
 import com.demo.android_development.pjwelcome.weatherappdemo.Utils.WeatherRequestUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONObject;
 
 /**
  * Created by PWelcome on 2015/12/09.
  */
-public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
+public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, ResultCallback<LocationSettingsResult> {
 
+    public static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final String TAG = CurrentWeatherFragment.class.getName();
-
     public LocationRequest mLocationRequest;
     public GoogleApiClient mGoogleApiClient;
     protected Location mCurrentLocation;
+    protected LocationSettingsRequest mLocationSettingsRequest;
     private ImageView currentWeatherIcon;
     private AppCompatTextView currentTemperature;
     private AppCompatTextView currentMinimumTemperature;
@@ -53,6 +66,11 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     private AppCompatTextView currentWeatherDescription;
     private AppCompatTextView currentLocationName;
     private boolean mLocationDidUpdate = false;
+    private ForecastWeatherFragment forecastWeatherFragment;
+
+    public static CurrentWeatherFragment newInstance() {
+        return new CurrentWeatherFragment();
+    }
 
     private void initViews(View view) {
         currentWeatherIcon = (ImageView) view.findViewById(R.id.weatherImage);
@@ -78,6 +96,12 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         currentLocationName.setText(model.getName());
     }
 
+    protected void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        mLocationSettingsRequest = builder.build();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +118,44 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.i(TAG, "User agreed to make required location settings changes.");
+                        startLocationUpdates();
+                        mLocationDidUpdate = false;
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i(TAG, "User chose not to make required location settings changes.");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                        builder.setTitle(getActivity().getString(R.string.LocationErrorMessageTitleString));
+                        builder.setMessage(getActivity().getString(R.string.LocationErrorMessageString));
+                        builder.setPositiveButton(getActivity().getString(R.string.RetryString), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                checkLocationSettings();
+                            }
+                        });
+                        builder.setNegativeButton(getActivity().getString(R.string.ExitString), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_MAIN);
+                                intent.addCategory(Intent.CATEGORY_HOME);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
+                        builder.show();
+                        break;
+                }
+                break;
+        }
+    }
+
     protected synchronized void buildGoogleApiClient() {
         Log.i(TAG, "Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -102,6 +164,8 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
                 .addApi(LocationServices.API)
                 .build();
         createLocationRequest();
+        buildLocationSettingsRequest();
+        checkLocationSettings();
     }
 
     protected void createLocationRequest() {
@@ -130,8 +194,6 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     public void onResume() {
         super.onResume();
         if (mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
-            mLocationDidUpdate = false;
         }
     }
 
@@ -156,11 +218,20 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
 
     protected void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+                mGoogleApiClient, mLocationRequest, this).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+
+            }
+        });
     }
 
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    public void setFiveDayWeather(ForecastWeatherFragment forecastWeatherFragment) {
+        this.forecastWeatherFragment = forecastWeatherFragment;
     }
 
     @Override
@@ -168,6 +239,9 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         Log.d(TAG, "onLocationChanged: " + location.getLatitude() + location.getLongitude());
         if (!mLocationDidUpdate) {
             makeJsonWeatherRequest(getContext(), String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+            if (this.forecastWeatherFragment != null) {
+                this.forecastWeatherFragment.startRequest();
+            }
             mLocationDidUpdate = true;
         }
     }
@@ -216,5 +290,41 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
         });
         // Adding request to request queue
         VolleyDataController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+    protected void checkLocationSettings() {
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        mGoogleApiClient,
+                        mLocationSettingsRequest
+                );
+        result.setResultCallback(this);
+    }
+
+    @Override
+    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+        final Status status = locationSettingsResult.getStatus();
+        switch (status.getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                Log.i(TAG, "All location settings are satisfied.");
+                startLocationUpdates();
+                break;
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to" +
+                        "upgrade location settings ");
+
+                try {
+                    // Show the dialog by calling startResolutionForResult(), and check the result
+                    // in onActivityResult().
+                    status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.i(TAG, "PendingIntent unable to execute request.");
+                }
+                break;
+            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog " +
+                        "not created.");
+                break;
+        }
     }
 }
