@@ -16,4 +16,5 @@ public class Constants {
     public static final LatLng portElizabeth = new LatLng(-33.902011, 18.473043);
     public static final LatLng durban = new LatLng(-25.694899, 28.229347);
     public static final LatLng pretoria = new LatLng(-29.800342, 30.967958);
+    public static final int REQUEST_LOCATION = 0;
 }

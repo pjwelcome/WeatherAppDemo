@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
@@ -31,11 +32,27 @@ public class Utilities {
 
     private static final int NOTIFCATIONID = 1;
     private static Utilities mInstance;
+    private static final String TAG = Utilities.getInstance().getClass().getName();
 
     public static Utilities getInstance() {
         if (mInstance == null)
             mInstance = new Utilities();
         return mInstance;
+    }
+
+    public static boolean verifyPermissions(int[] grantResults) {
+        // At least one result must be checked.
+        if (grantResults.length < 1) {
+            return false;
+        }
+
+        // Verify that each required permission has been granted, otherwise return false.
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isCelsius(Context context) {
@@ -62,7 +79,6 @@ public class Utilities {
 
         }
     }
-
 
     public void createWearablePagingNotification(Context context, List<ForecastModel> models) {
 

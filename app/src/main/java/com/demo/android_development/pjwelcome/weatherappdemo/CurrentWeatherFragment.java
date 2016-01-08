@@ -1,5 +1,6 @@
 package com.demo.android_development.pjwelcome.weatherappdemo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,11 +8,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
@@ -49,7 +53,7 @@ import org.json.JSONObject;
 /**
  * Created by PWelcome on 2015/12/09.
  */
-public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener, ResultCallback<LocationSettingsResult> {
+public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.OnConnectionFailedListener, ResultCallback<LocationSettingsResult> {
 
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final String TAG = CurrentWeatherFragment.class.getName();
@@ -67,6 +71,7 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     private AppCompatTextView currentLocationName;
     private boolean mLocationDidUpdate = false;
     private ForecastWeatherFragment forecastWeatherFragment;
+
 
     public static CurrentWeatherFragment newInstance() {
         return new CurrentWeatherFragment();
@@ -198,8 +203,30 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == Constants.REQUEST_LOCATION) {
+            Log.i(TAG, "Received response for location permissions request.");
+
+            if (Utilities.getInstance().verifyPermissions(grantResults)) {
+            } else {
+                Snackbar.make(getView(), "You have not granted this app permissions to location there for it can not be used.",
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     public void onConnected(Bundle bundle) {
         if (mCurrentLocation == null) {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestLocationPermission(getActivity());
+                return;
+            }
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             Log.d(TAG, "onConnected: Connected");
         }
@@ -216,7 +243,30 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
 
     }
 
+    public void requestLocationPermission(Activity activity) {
+        Log.i(TAG, "Location permission has NOT been granted. Requesting permission.");
+
+        // BEGIN_INCLUDE(camera_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    Constants.REQUEST_LOCATION);
+
+        } else {
+
+            // Camera permission has not been granted yet. Request it directly.
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    Constants.REQUEST_LOCATION);
+        }
+        // END_INCLUDE(camera_permission_request)
+    }
     protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission(getActivity());
+            return;
+        }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -312,10 +362,7 @@ public class CurrentWeatherFragment extends Fragment implements GoogleApiClient.
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to" +
                         "upgrade location settings ");
-
                 try {
-                    // Show the dialog by calling startResolutionForResult(), and check the result
-                    // in onActivityResult().
                     status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
                 } catch (IntentSender.SendIntentException e) {
                     Log.i(TAG, "PendingIntent unable to execute request.");

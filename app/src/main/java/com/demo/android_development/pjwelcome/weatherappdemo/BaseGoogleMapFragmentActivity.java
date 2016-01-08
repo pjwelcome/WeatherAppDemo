@@ -1,6 +1,9 @@
 package com.demo.android_development.pjwelcome.weatherappdemo;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,7 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 
 
-public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity {
+public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private GoogleMap mMap;
     private Toolbar toolbar;
 
@@ -74,6 +77,10 @@ public abstract class BaseGoogleMapFragmentActivity extends AppCompatActivity {
             mUiSettings.setZoomGesturesEnabled(true);
             mUiSettings.setTiltGesturesEnabled(true);
             mUiSettings.setRotateGesturesEnabled(true);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return;
+            }
             mMap.setMyLocationEnabled(true);
 
             executeGoogleMapCode();
